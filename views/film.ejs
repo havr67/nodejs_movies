@@ -1,0 +1,200 @@
+<div class="container">
+    <h3 class="display-4 text-left mt-4"><%= data.filmName %></h3>
+    <hr>
+    <div class="card text-center film" filmId="<%= data.results.id%>">
+        <div class="row no-gutters">
+            <div class="col-sm-3">
+
+                <img src="https://image.tmdb.org/t/p/w185/<%= data.results.poster_path %>" width="85%"
+                    alt="<%= data.results.title%>">
+                <div class="buttons-block">
+                    <% if (data.isAuth) { %>
+                    <% if (data.userFilms.indexOf(data.results.id) == -1) { %>
+                    <button class="btn btn-outline-secondary unliked-movie mt-2"><img class="mr-1"
+                            src="/images/like-inactive.svg" width="20px" height="20px">Add to favorites</button>
+                    <button class="btn btn-outline-secondary liked-movie mt-2" style="display: none;"><img class="mr-1"
+                            src="/images/like-active.svg" width="20px" height="20px"> Remove from
+                        favorites</button>
+                    <% } else { %>
+                    <button class="btn btn-outline-secondary liked-movie mt-2"><img class="mr-1"
+                            src="/images/like-active.svg" width="20px" height="20px"> Remove from favorites</button>
+                    <button class="btn btn-outline-secondary unliked-movie mt-2" style="display: none;"><img
+                            class="mr-1" src="/images/like-inactive.svg" width="20px" height="20px">Add to
+                        favorites</button>
+                    <% } %>
+                    <% } %>
+                </div>
+            </div>
+            <div class="col-sm-7">
+                <table class=" table text-left">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Title</th>
+                            <td><%= data.results.title%></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Year</th>
+                            <td><%= data.results.release_date.substring(4, -4);%></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Genre</th>
+                            <td>
+                                <% data.results.genres.forEach(item => { %>
+                                <a class="btn btn-outline-info btn-sm"
+                                    href="/films/genre/<%= item.name.toLowerCase() %>/1"
+                                    role="button"><%= item.name %></a>
+
+                                <% }) %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Overview</th>
+                            <td><%= data.results.overview%></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Rating</th>
+                            <td>
+                                <% if (data.rating == null) { %>
+                                0
+                                <% } else { %>
+                                <%= data.rating.average %>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Rate this</th>
+                            <% if (data.isAuth) { %>
+                            <td>
+                                <% if (data.rating != null) { %>
+                                <% if (data.rating.userId.indexOf(data.userId) == -1) { %>
+                                <form class="send-rating d-flex">
+                                    <input id="input-1-ltr-star-xs" name="input-1-ltr-star-xs"
+                                        class="kv-ltr-theme-uni-star rating-loading" value="1" dir="ltr" data-size="xs">
+                                    <button type="buton"
+                                        class="ml-2 btn btn-outline-dark btn-sm send-rating">Vote</button>
+                                </form>
+                                <% } else { %>
+                                You are vote!!!
+                                <% } %>
+                                <% } else { %>
+                                <form class="send-rating d-flex">
+                                    <input id="input-1-ltr-star-xs" name="input-1-ltr-star-xs"
+                                        class="kv-ltr-theme-uni-star rating-loading" value="1" dir="ltr" data-size="xs">
+                                    <button type="buton"
+                                        class="ml-2 btn btn-outline-dark btn-sm send-rating">Vote</button>
+                                </form>
+                                <% } %>
+                            </td>
+
+                            <% } else { %>
+                            <td>
+                                Register or sign in to set rating
+                                <button class="btn btn-outline-dark btn-sm" data-toggle="modal"
+                                    data-target="#loginModal">Click
+                                    here</button>
+
+                            </td>
+                            <% } %>
+                        </tr>
+                        <tr>
+                            <th scope="row">Tags</th>
+                            <td>
+                                <% if (data.tags) {%>
+                                <% data.tags.forEach((el) => { %>
+                                <a href="/search/tags/<%= el %>" class="btn btn-outline-secondary btn-sm" role="button"
+                                    aria-pressed="true"><%= el %></a>
+                                <% }) %>
+                                <% if (data.isAuth) { %>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#tagModal">
+                                    Add tags
+                                </button>
+                                <% } %>
+
+                                <% } else { %>
+                                <p>None</p>
+                                <% if (data.isAuth) { %>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#tagModal">
+                                    Add tags
+                                </button>
+                                <% } %>
+                                <% } %>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="comments">
+        <h3 class="display-5 text-left">Comments</h3>
+        <hr>
+        <% if (data.comments.length != 0) { %>
+        <% if (data.isAuth) { %>
+        <a data-toggle="collapse" class="btn btn-primary btn-sm text-left" href="#collapseExample" role="button"
+            aria-expanded="false" aria-controls="collapseExample">
+            Leave comment
+        </a>
+        <div class="collapse" id="collapseExample">
+            <form class="col-sm-8 mb-3 mt-3 p-0 comment-form">
+                <div class="form-group">
+                    <p class="text-left mb-1">Your comment:</p>
+                    <textarea class="form-control" id="comment" rows="2"></textarea>
+                </div>
+                <button type="button" id="send-comment" class="btn btn-primary btn-sm" type="button">Send
+                    comment</button>
+            </form>
+        </div>
+        <% } else { %>
+        <div class="alert alert-warning col-12 text-center" role="alert">
+            Register or sign in to leave a comment
+            <button class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#loginModal">Click
+                here</button>
+        </div>
+        <% } %>
+        <% data.comments.forEach((el) => { %>
+        <div class="card bg-light mb-3">
+            <div class="card-header text-left"><span class="comment-name"><%= el.author.name %></span> <small
+                    class="text-muted"><%= el.added %></small></div>
+            <div class="card-body">
+                <div class="row no-gutters">
+                    <div class="col-sm-2 text-left">
+                        <img src="/images/default-avatar.png" alt="user avatar">
+                    </div>
+                    <div class="col-sm-10">
+                        <p class="text-left"><%= el.text %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+        <% } else { %>
+        <% if (data.isAuth) {%>
+        <div class="bg-light text-black-50 d-flex flex-column justify-content-center align-items-center"
+            style="min-height: 200px">
+            <p>No one comments found. You can be first</p>
+            <form class="col-sm-8 mb-3 mt-3 p-0 comment-form">
+                <div class="form-group">
+                    <p class="text-left mb-1">Your comment:</p>
+                    <textarea class="form-control" id="comment" rows="2"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm" id="send-comment" type="button">Send
+                    comment</button>
+            </form>
+        </div>
+        <% } else { %>
+        <div class="bg-light text-black-50 d-flex flex-column justify-content-center align-items-center"
+            style="min-height: 120px">
+            <p>No one comments found. You can be first if you signin/signup.</p>
+            <button class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#loginModal">Click
+                here</button>
+
+        </div>
+        <% } %>
+    </div>
+    <% } %>
+</div>
+
+</div>

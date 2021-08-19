@@ -1,0 +1,46 @@
+body {
+  max-width: 1440px;
+  margin: auto !important;
+}
+.genres ul {
+    list-style-type: none;
+  -moz-column-count: 3; /* Firefox */
+  -webkit-column-count: 3; /* Safari and Chrome */
+  column-count: 4;
+  height: auto;
+}
+
+a:hover {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.flash-span {
+  color: red;
+    font-size: 14px;
+}
+
+.success-span {
+  color: green !important;
+}
+
+.animated {
+  -webkit-transition: height 0.2s;
+  -moz-transition: height 0.2s;
+  transition: height 0.2s;
+}
+
+.stars {
+  margin: 20px 0;
+  font-size: 24px;
+  color: #d17581;
+}
+
+.comments {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.like-movie {
+  margin-top: 10px;
+}
